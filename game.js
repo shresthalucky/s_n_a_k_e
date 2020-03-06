@@ -8,8 +8,10 @@ var height;
 var width;
 const size = 20;
 
-var xApple;
-var yApple;
+var xApple = 0;
+var yApple = 0;
+var xCactus = 0;
+var yCactus = 0;
 
 var key = "ArrowRight";
 
@@ -90,6 +92,12 @@ class Snake {
     }
 
     dead() {
+
+        if (this.x == xCactus && this.y == yCactus) {
+            drawCactus();
+            return true;
+        }
+
         for (let i = 0; i < this.tail.length; i++) {
             if (this.x == this.tail[i][0] && this.y == this.tail[i][1]) {
                 return true;
@@ -126,6 +134,7 @@ function initCanvas() {
 
     snake.draw();
     drawApple();
+    drawCactus();
     setInterval(gameLoop, 60);
 }
 
@@ -141,7 +150,8 @@ function drawApple() {
     for (let i = 0; i < snake.tail.length; i++) {
         xApple = Math.floor(Math.random() * width) * size;
         yApple = Math.floor(Math.random() * height) * size;
-        if (xApple == snake.tail[i][0] && yApple == snake.tail[i][1]) {
+        if ((xApple == snake.tail[i][0] && yApple == snake.tail[i][1])
+            && (xCactus == xApple && yCactus == yApple)) {
             continue;
         } else {
             break;
@@ -150,6 +160,24 @@ function drawApple() {
     ctx.beginPath();
     ctx.rect(xApple, yApple, size, size);
     ctx.fillStyle = "red";
+    ctx.fill();
+    ctx.closePath();
+}
+
+function drawCactus(){
+    for (let i = 0; i < snake.tail.length; i++) {
+        xCactus = Math.floor(Math.random() * width) * size;
+        yCactus = Math.floor(Math.random() * height) * size;
+        if ((xCactus == snake.tail[i][0] && yCactus == snake.tail[i][1])
+             && (xCactus == xApple && yCactus == yApple)) {
+            continue;
+        } else {
+            break;
+        }
+    }
+    ctx.beginPath();
+    ctx.rect(xCactus, yCactus, size, size);
+    ctx.fillStyle = "black";
     ctx.fill();
     ctx.closePath();
 }
